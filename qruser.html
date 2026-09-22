@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR cá nhân - Smart Cabinet</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <main class="qr-page">
+        <section class="qr-card">
+            <div class="login-icon">▣</div>
+            <h1>Mã QR cá nhân</h1>
+            <p id="userInfo">Đang tải thông tin...</p>
+            <div id="qrcode" class="qr-code"></div>
+            <p id="qrError" class="login-error"></p>
+            <button id="logoutBtn" class="login-btn">Đăng xuất</button>
+        </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="module" src="qruser.js"></script>
+</body>
+</html>

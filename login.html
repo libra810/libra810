@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>User Login - Smart Cabinet</title>
+
+    <link
+        rel="stylesheet"
+        href="login.css"
+    >
+</head>
+
+
+<body>
+
+    <div class="login-page">
+
+        <!-- LEFT -->
+        <div class="login-left">
+
+            <div class="brand">
+
+                <img
+                    src="https://iuh.edu.vn/assets/images/iuh.png?v=51"
+                    alt="IUH"
+                >
+
+                <div>
+                    <h1>SMART CABINET</h1>
+
+                    <span>
+                        KHÓA LUẬN TỐT NGHIỆP - IUH
+                    </span>
+                </div>
+
+            </div>
+
+
+            <div class="left-content">
+
+                <h2>
+                    Hệ thống xác thực
+                    <br>
+                    người dùng
+                </h2>
+
+                <p>
+                    Đăng nhập bằng MSSV và PIN để mở mã QR cá nhân.
+                </p>
+
+            </div>
+
+
+            <div class="left-footer">
+
+                KHOA CÔNG NGHỆ ĐIỆN TỬ - IUH
+
+            </div>
+
+        </div>
+
+
+
+        <!-- RIGHT -->
+        <div class="login-right">
+
+            <div class="login-card">
+
+                <div class="login-icon">
+                    🔐
+                </div>
+
+
+                <h2>
+                    Đăng nhập người dùng
+                </h2>
+
+
+                <p class="login-description">
+                    Nhập thông tin do quản trị viên cung cấp
+                </p>
+
+
+                <!-- MSSV -->
+
+                <div class="form-group">
+
+                    <label for="mssv">
+                        MSSV
+                    </label>
+
+                    <input
+                        type="text"
+                        id="mssv"
+                        placeholder="Nhập MSSV"
+                        inputmode="numeric"
+                        autocomplete="username"
+                    >
+
+                </div>
+
+
+                <!-- PIN -->
+
+                <div class="form-group">
+
+                    <label for="pin">
+                        PIN
+                    </label>
+
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="pin"
+                            placeholder="Nhập PIN"
+                            inputmode="numeric"
+                            maxlength="10"
+                            autocomplete="current-password"
+                        >
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="show-password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- REMEMBER -->
+
+                <div class="login-options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="remember"
+                        >
+
+                        <span>
+                            Ghi nhớ MSSV
+                        </span>
+
+                    </label>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                <div
+                    class="login-error"
+                    id="loginError"
+                ></div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                    class="login-btn"
+                    id="loginBtn"
+                >
+                    Đăng nhập
+                </button>
+
+
+                <p class="security-note">
+
+                    🔒 Thông tin đăng nhập do quản trị viên cấp
+
+                </p>
+
+                <button
+                    type="button"
+                    class="admin-mode-btn"
+                    id="adminModeBtn"
+                >
+                    Đăng nhập quản trị viên
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="module" src="login.js"></script>
+
+</body>
+
+</html>

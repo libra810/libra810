@@ -1,0 +1,1229 @@
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #e9f7fc;
+
+    color: #172b3a;
+
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.top-header {
+
+    height: 48px;
+
+    background: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 16px;
+
+    box-shadow:
+        0 1px 5px rgba(0, 0, 0, .08);
+}
+
+
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.iuh-logo {
+
+    width: 70px;
+
+    height: auto;
+}
+
+
+.header-title {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #29445a;
+}
+
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 12px;
+}
+
+
+.logout-btn {
+
+    border: none;
+
+    background: #edf5f8;
+
+    color: #506875;
+
+    padding: 7px 11px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+
+.logout-btn:hover {
+
+    background: #dcebef;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.container {
+
+    width: 98%;
+
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 10px 0 15px;
+}
+
+
+/* =====================================================
+   BANNER
+===================================================== */
+
+.project-banner {
+
+    background:
+        linear-gradient(
+            135deg,
+            #224965,
+            #147b72
+        );
+
+    color: #ffffff;
+
+    text-align: center;
+
+    border-radius: 13px;
+
+    padding: 17px 25px 15px;
+
+    margin-bottom: 18px;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.12);
+}
+
+
+.project-banner h1 {
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    font-size: 20px;
+
+    line-height: 1.25;
+
+    font-weight: 800;
+}
+
+
+.faculty {
+
+    margin-top: 10px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    color: #d3eeee;
+}
+
+
+/* =====================================================
+   MEMBERS
+===================================================== */
+
+.member-list {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    margin-top: 12px;
+}
+
+
+.member {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    border-radius: 20px;
+
+    font-size: 10px;
+}
+
+
+.member span {
+
+    color: #d5eeee;
+
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   CABINET LIST
+===================================================== */
+
+.cabinet-list {
+
+    width: 82%;
+
+    margin: 0 auto 8px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+}
+
+
+/* =====================================================
+   CABINET CARD
+===================================================== */
+
+.cabinet-card {
+
+    min-height: 88px;
+
+    background: #ffffff;
+
+    border-radius: 9px;
+
+    padding: 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    box-shadow:
+        0 3px 8px rgba(55,94,110,.14);
+}
+
+
+/* =====================================================
+   CABINET IMAGE
+===================================================== */
+
+.cabinet-image {
+
+    width: 52px;
+
+    height: 70px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffb0ac,
+            #ee4548
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        background .3s ease,
+        box-shadow .3s ease;
+}
+
+
+/* OPEN = GREEN */
+
+.cabinet-image.open {
+
+    background:
+        linear-gradient(
+            180deg,
+            #79dca9,
+            #16a36a
+        );
+
+    box-shadow:
+        0 3px 8px
+        rgba(22,163,106,.25);
+}
+
+
+.cabinet-door {
+
+    width: 42px;
+
+    height: 61px;
+
+    border-radius: 4px;
+
+    position: relative;
+
+    border:
+        1px solid
+        rgba(255,255,255,.35);
+}
+
+
+.handle {
+
+    position: absolute;
+
+    right: 3px;
+
+    top: 24px;
+
+    width: 3px;
+
+    height: 20px;
+
+    border-radius: 4px;
+
+    background: #ffffff;
+
+    opacity: .9;
+}
+
+
+/* =====================================================
+   CABINET INFO
+===================================================== */
+
+.cabinet-info {
+
+    flex: 1;
+}
+
+
+.cabinet-info h2 {
+
+    font-size: 15px;
+
+    color: #263f53;
+
+    margin-bottom: 5px;
+}
+
+
+.status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #354858;
+}
+
+
+.status-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #e53935;
+
+    transition:
+        background .3s ease;
+}
+
+
+.status-dot.open {
+
+    background: #16a36a;
+}
+
+
+/* =====================================================
+   SWITCH
+===================================================== */
+
+.switch {
+
+    position: relative;
+
+    width: 38px;
+
+    height: 21px;
+
+    margin-right: 8px;
+}
+
+
+.switch input {
+
+    display: none;
+}
+
+
+.slider {
+
+    position: absolute;
+
+    inset: 0;
+
+    background: #d7e6eb;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    transition: .3s;
+}
+
+
+.slider::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 17px;
+
+    height: 17px;
+
+    left: 2px;
+
+    top: 2px;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0,0,0,.2);
+
+    transition: .3s;
+}
+
+
+.switch input:checked + .slider {
+
+    background: #169486;
+}
+
+
+.switch input:checked + .slider::before {
+
+    transform:
+        translateX(17px);
+}
+
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.panel {
+
+    background: #ffffff;
+
+    border-radius: 8px;
+
+    padding: 9px;
+
+    margin-bottom: 10px;
+
+    box-shadow:
+        0 2px 7px
+        rgba(50,91,108,.10);
+}
+
+
+.panel h3 {
+
+    color: #304c5b;
+
+    font-size: 12px;
+
+    margin-bottom: 8px;
+}
+
+
+.register-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+/* =====================================================
+   INPUT / SELECT
+===================================================== */
+
+select,
+input {
+
+    height: 29px;
+
+    padding: 0 9px;
+
+    border:
+        1px solid #cedde4;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    color: #344856;
+
+    font-size: 11px;
+
+    outline: none;
+}
+
+
+select:focus,
+input:focus {
+
+    border-color: #529eb1;
+}
+
+
+/* =====================================================
+   MAIN BUTTONS
+===================================================== */
+
+.register-btn,
+.history-btn,
+.save-btn,
+.cancel-btn,
+.delete-btn {
+
+    height: 30px;
+
+    padding: 0 13px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    cursor: pointer;
+}
+
+
+.register-btn,
+.history-btn,
+.cancel-btn {
+
+    border:
+        1px solid #d8e0e3;
+
+    background: #eef4f6;
+
+    color: #3a5865;
+}
+
+
+.register-btn:hover,
+.history-btn:hover,
+.cancel-btn:hover {
+
+    background: #dcecef;
+}
+
+
+.save-btn {
+
+    border: none;
+
+    background: #2d6174;
+
+    color: #ffffff;
+
+    box-shadow:
+        0 3px 7px
+        rgba(45,97,116,.25);
+}
+
+
+.save-btn:hover {
+
+    background: #245466;
+}
+
+
+.delete-btn {
+
+    border: none;
+
+    background: #e55353;
+
+    color: #ffffff;
+}
+
+
+.delete-btn:hover {
+
+    background: #cb3f3f;
+}
+
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-wrapper {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+table {
+
+    width: 100%;
+
+    table-layout: fixed;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+}
+
+
+thead {
+
+    background: #d9eafb;
+}
+
+
+th {
+
+    padding: 7px 5px;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    font-weight: 700;
+}
+
+
+td {
+
+    padding: 7px 5px;
+
+    text-align: center;
+
+    color: #566a73;
+
+    border-bottom:
+        1px solid #edf2f4;
+
+    word-break: break-word;
+
+    overflow-wrap: anywhere;
+}
+
+
+tbody tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+.empty {
+
+    padding: 10px;
+
+    color: #9ba7ab;
+
+    font-style: italic;
+}
+
+
+/* =====================================================
+   TABLE ACTIONS
+===================================================== */
+
+.table-btn {
+
+    border: none;
+
+    cursor: pointer;
+
+    border-radius: 5px;
+
+    padding: 5px 7px;
+
+    margin: 1px;
+
+    font-size: 9px;
+}
+
+
+.edit-btn {
+
+    background: #e7f2f7;
+
+    color: #386476;
+}
+
+
+.renew-btn {
+
+    background: #eaf6ed;
+
+    color: #298153;
+}
+
+
+.pin-btn {
+
+    background: #fff3df;
+
+    color: #a06b15;
+}
+
+
+.delete-table-btn {
+
+    background: #ffebeb;
+
+    color: #c63d3d;
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+.history-filter {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 7px;
+}
+
+
+.history-description {
+
+    color: #9ca8ad;
+
+    font-size: 9px;
+
+    margin-bottom: 5px;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(19,37,50,.62);
+}
+
+
+.modal-overlay.show {
+
+    display: flex;
+}
+
+
+.modal {
+
+    width: 100%;
+
+    max-width: 420px;
+
+    background: #ffffff;
+
+    border-radius: 13px;
+
+    padding: 18px 20px 16px;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.30);
+
+    animation:
+        modalShow .2s ease;
+}
+
+
+.small-modal {
+
+    max-width: 320px;
+}
+
+
+@keyframes modalShow {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-10px)
+            scale(.97);
+    }
+
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* =====================================================
+   MODAL ICON
+===================================================== */
+
+.modal-icon {
+
+    width: 43px;
+
+    height: 43px;
+
+    margin:
+        0 auto 8px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff5dc;
+
+    font-size: 23px;
+}
+
+
+.lock-icon {
+
+    background: #fff3d8;
+}
+
+
+/* =====================================================
+   MODAL TITLE
+===================================================== */
+
+.modal h2 {
+
+    text-align: center;
+
+    color: #263b47;
+
+    font-size: 15px;
+
+    margin-bottom: 4px;
+}
+
+
+.modal-subtitle {
+
+    text-align: center;
+
+    color: #9aa7ad;
+
+    font-size: 10px;
+
+    margin-bottom: 12px;
+}
+
+
+/* =====================================================
+   UID
+===================================================== */
+
+.cabinet-uid {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    color: #4e626c;
+
+    font-size: 10px;
+
+    margin-bottom: 12px;
+}
+
+
+.uid-text {
+
+    word-break: break-all;
+
+    color: #27576b;
+}
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-bottom: 10px;
+}
+
+.form-group label {
+
+    color: #283d47;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    height: 32px;
+
+    padding: 0 10px;
+
+    border:
+        1px solid #d6dfe3;
+
+    border-radius: 7px;
+}
+
+
+.form-group label {
+
+    color: #283d47;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.form-group input,
+.form-group select {
+
+    width: 100%;
+
+    height: 32px;
+
+    padding: 0 10px;
+
+    border:
+        1px solid #d6dfe3;
+
+    border-radius: 7px;
+}
+
+
+/* =====================================================
+   MODAL NOTE
+===================================================== */
+
+.modal-note {
+
+    color: #9aa5aa;
+
+    font-size: 9px;
+
+    margin:
+        2px 0 13px;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error-message {
+
+    display: none;
+
+    text-align: center;
+
+    color: #db4141;
+
+    font-size: 9px;
+
+    margin:
+        -3px 0 10px;
+}
+
+
+.error-message.show {
+
+    display: block;
+}
+
+
+/* =====================================================
+   MODAL BUTTONS
+===================================================== */
+
+.modal-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+.delete-info {
+
+    text-align: center;
+
+    background: #f8fafb;
+
+    padding: 10px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    margin-bottom: 15px;
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+
+    position: fixed;
+
+    right: 25px;
+
+    bottom: 25px;
+
+    z-index: 10000;
+
+    background: #2c6877;
+
+    color: #ffffff;
+
+    padding: 11px 16px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform:
+        translateY(10px);
+
+    transition: .25s;
+}
+
+
+.toast.show {
+
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+
+.toast.error {
+
+    background: #c84747;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+
+    text-align: center;
+
+    color: #78909c;
+
+    font-size: 9px;
+
+    padding-bottom: 9px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 850px) {
+
+    .cabinet-list {
+
+        width: 100%;
+
+        gap: 12px;
+    }
+
+
+    .project-banner h1 {
+
+        font-size: 17px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .header-title {
+
+        display: none;
+    }
+
+
+    .cabinet-list {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .project-banner h1 {
+
+        font-size: 14px;
+    }
+
+
+    .register-row,
+    .history-filter {
+
+        flex-wrap: wrap;
+    }
+
+}

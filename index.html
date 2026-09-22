@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Smart Cabinet - IUH</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<header class="top-header">
+
+    <div class="header-left">
+
+        <img
+            src="https://iuh.edu.vn/assets/images/iuh.png?v=51"
+            alt="IUH Logo"
+            class="iuh-logo"
+        >
+
+        <div class="header-title">
+            KHÓA LUẬN TỐT NGHIỆP
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span id="clock">
+            00:00:00
+        </span>
+
+        <button
+            class="logout-btn"
+            id="logoutBtn"
+        >
+            Đăng xuất
+        </button>
+
+        <button
+            class="logout-btn"
+            id="changeAdminPasswordBtn"
+        >
+            Đổi mật khẩu
+        </button>
+
+        <button
+            class="logout-btn"
+            id="changeAdminPinBtn"
+        >
+            Đổi PIN
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN
+====================================================== -->
+
+<main class="container">
+
+
+    <!-- =================================================
+         PROJECT BANNER
+    ================================================== -->
+
+    <section class="project-banner">
+
+        <h1>
+            NGHIÊN CỨU THIẾT KẾ VI MẠCH MẬT MÃ HẠNG NHẸ GIFT-128 TRÊN FPGA ỨNG DỤNG TRONG BẢO MẬT HỆ THỐNG TỦ GỬI ĐỒ.
+        </h1>
+
+
+        <p class="faculty">
+            KHOA CÔNG NGHỆ ĐIỆN TỬ - IUH
+        </p>
+
+
+        <div class="member-list">
+
+            <div class="member">
+                🎓
+
+                <strong>
+                    Trần Nguyễn Xuân Phúc
+                </strong>
+
+                <span>
+                    22712151
+                </span>
+            </div>
+
+
+            <div class="member">
+                🎓
+
+                <strong>
+                    Biện Thị Mỹ Xuyên
+                </strong>
+
+                <span>
+                    22698951
+                </span>
+            </div>
+
+
+            <div class="member">
+
+                👨‍🏫
+
+                <strong>
+                    ThS. Lê Lý Quyên Quyên
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         CABINET
+    ================================================== -->
+
+    <section class="cabinet-list">
+
+
+        <!-- ================= CABINET 1 ================= -->
+
+        <div class="cabinet-card">
+
+            <div
+                class="cabinet-image"
+                id="cabinetImage1"
+            >
+
+                <div class="cabinet-door">
+
+                    <div class="handle"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="cabinet-info">
+
+                <h2>
+                    CABINET 1
+                </h2>
+
+
+                <div class="status">
+
+                    <span
+                        class="status-dot"
+                        id="statusDot1"
+                    ></span>
+
+                    <span id="statusText1">
+                        CLOSED
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="switch1"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+
+
+        <!-- ================= CABINET 2 ================= -->
+
+        <div class="cabinet-card">
+
+            <div
+                class="cabinet-image"
+                id="cabinetImage2"
+            >
+
+                <div class="cabinet-door">
+
+                    <div class="handle"></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="cabinet-info">
+
+                <h2>
+                    CABINET 2
+                </h2>
+
+
+                <div class="status">
+
+                    <span
+                        class="status-dot"
+                        id="statusDot2"
+                    ></span>
+
+                    <span id="statusText2">
+                        CLOSED
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="switch2"
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         REGISTER PANEL
+    ================================================== -->
+
+    <section class="panel">
+
+        <div class="register-row">
+
+            <select id="cabinetSelect">
+
+                <option value="Cabinet 1">
+                    Cabinet 1
+                </option>
+
+                <option value="Cabinet 2">
+                    Cabinet 2
+                </option>
+
+            </select>
+
+
+            <button
+                class="register-btn"
+                id="openRegisterBtn"
+            >
+                Đăng ký Cabinet
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         REGISTERED CARD TABLE
+    ================================================== -->
+
+    <section class="panel">
+
+        <h3>
+            Danh sách thẻ đã đăng ký
+        </h3>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Cabinet
+                        </th>
+                        <th>
+                            MSSV
+                        </th>
+
+                        <th>
+                            Owner
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            UID_Encrypt
+                        </th>
+
+                        <th>
+                            Pin
+                        </th>
+
+                        <th>
+                            SignupDate
+                        </th>
+
+                        <th>
+                            ExpirationDate
+                        </th>
+
+                        <th>
+                            PersonalDataEncrypt
+                        </th>
+
+                        <th>
+                            Edit
+                        </th>
+
+                        <th>
+                            Delete
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="registeredTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         HISTORY
+    ================================================== -->
+
+    <section class="panel">
+
+        <h3>
+            Lịch sử mở tủ
+        </h3>
+
+
+        <div class="history-filter">
+
+            <select id="historyCabinet">
+
+                <option value="all">
+                    Tất cả tủ
+                </option>
+
+                <option value="Cabinet 1">
+                    Cabinet 1
+                </option>
+
+                <option value="Cabinet 2">
+                    Cabinet 2
+                </option>
+
+            </select>
+
+
+            <input
+                type="date"
+                id="historyDate"
+            >
+
+
+            <button
+                class="history-btn"
+                id="historyButton"
+            >
+                Xem lịch sử
+            </button>
+
+        </div>
+
+
+        <p
+            class="history-description"
+            id="historyDescription"
+        >
+            Không có hoạt động.
+        </p>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Time
+                        </th>
+
+                        <th>
+                            Cabinet
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                        <th>
+                            Result
+                        </th>
+
+                        <th>
+                            Source
+                        </th>
+
+                        <th>
+                            Detail
+                        </th>
+
+                        <th>
+                            Delete
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="historyTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    © 2026 - KHÓA LUẬN TỐT NGHIỆP - IUH
+
+</footer>
+
+
+
+<!-- =====================================================
+     MODAL - REGISTER
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="registerModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-icon">
+            📱
+        </div>
+
+
+        <h2>
+            Đăng ký Cabinet
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Nhập thông tin để đăng ký
+        </p>
+
+
+        <div class="cabinet-uid">
+
+            <div>
+
+                Cabinet:
+
+                <strong id="modalCabinet">
+                    Cabinet 1
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                UID:
+
+                <strong
+                    id="modalUID"
+                    class="uid-text"
+                ></strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Owner
+            </label>
+
+            <input
+                type="text"
+                id="ownerInput"
+            >
+
+        </div>
+
+         <div class="form-group">
+
+            <label>
+                MSSV
+            </label>
+
+            <input
+                type="text"
+                id="mssvInput"
+            >
+
+        </div>   
+        <div class="form-group">
+
+            <label>
+                Phone
+            </label>
+
+            <input
+                type="text"
+                id="phoneInput"
+            >
+
+        </div>
+
+        <div class="form-group">
+
+            <label>
+                PIN người dùng
+            </label>
+
+            <input
+                type="password"
+                id="userPinInput"
+                inputmode="numeric"
+                maxlength="10"
+                placeholder="4-10 chữ số"
+            >
+
+        </div>
+
+
+        <p class="modal-note">
+
+            Sau khi lưu đăng ký,
+            hệ thống sẽ yêu cầu xác nhận PIN ADMIN.
+
+        </p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="registerSaveBtn"
+            >
+                Lưu đăng ký
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="registerModal"
+            >
+                Hủy đăng ký
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - ADMIN PIN
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="adminPinModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon lock-icon">
+            🔐
+        </div>
+
+
+        <h2>
+            Xác nhận ADMIN
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Nhập PIN để thực hiện thao tác
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                PIN
+            </label>
+
+
+            <input
+                type="password"
+                id="adminPinInput"
+                maxlength="10"
+                inputmode="numeric"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <p
+            class="error-message"
+            id="adminPinError"
+        >
+            PIN không chính xác.
+        </p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="confirmAdminPin"
+            >
+                OK
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="adminPinModal"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - EDIT
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="editModal"
+>
+
+    <div class="modal">
+
+        <div class="modal-icon">
+            ✏️
+        </div>
+
+
+        <h2>
+            Chỉnh sửa Cabinet
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Cập nhật thông tin
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                Owner
+            </label>
+
+            <input
+                type="text"
+                id="editOwner"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                MSSV
+            </label>
+
+            <input
+                type="text"
+                id="editmssv"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Phone
+            </label>
+
+            <input
+                type="text"
+                id="editPhone"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Personal Data
+            </label>
+
+            <input
+                type="text"
+                id="editPersonalData"
+            >
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="saveEditBtn"
+            >
+                Lưu thay đổi
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="editModal"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - RENEW
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="renewModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon">
+            ⚠️
+        </div>
+
+
+        <h2>
+            GIA HẠN
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Bạn muốn gia hạn thẻ này?
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                Số tháng gia hạn
+            </label>
+
+
+            <select id="renewMonth">
+
+                <option value="1">
+                    1 tháng
+                </option>
+
+                <option value="3">
+                    3 tháng
+                </option>
+
+                <option value="6">
+                    6 tháng
+                </option>
+
+                <option value="12">
+                    12 tháng
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="renewConfirmBtn"
+            >
+                OK
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="renewModal"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - UPDATE PIN
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="updatePinModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon">
+            🔑
+        </div>
+
+
+        <h2>
+            CẬP NHẬT PIN
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Thay đổi PIN của Cabinet
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                PIN mới
+            </label>
+
+
+            <input
+                type="password"
+                id="newPinInput"
+                maxlength="10"
+                inputmode="numeric"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Xác nhận PIN mới
+            </label>
+
+
+            <input
+                type="password"
+                id="confirmNewPinInput"
+                maxlength="10"
+                inputmode="numeric"
+            >
+
+        </div>
+
+
+        <p
+            class="error-message"
+            id="newPinError"
+        >
+            PIN không hợp lệ.
+        </p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="updatePinBtn"
+            >
+                OK
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="updatePinModal"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - CHANGE ADMIN PASSWORD
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="changeAdminPasswordModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon">
+            🔐
+        </div>
+
+
+        <h2>
+            ĐỔI MẬT KHẨU ADMIN
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Cập nhật mật khẩu đăng nhập Admin
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                Mật khẩu hiện tại
+            </label>
+
+            <input
+                type="password"
+                id="currentAdminPassword"
+                autocomplete="current-password"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Mật khẩu mới
+            </label>
+
+            <input
+                type="password"
+                id="newAdminPassword"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Xác nhận mật khẩu mới
+            </label>
+
+            <input
+                type="password"
+                id="confirmAdminPassword"
+                autocomplete="new-password"
+            >
+
+        </div>
+
+
+        <p
+            class="error-message"
+            id="adminPasswordError"
+        ></p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="saveAdminPasswordBtn"
+            >
+                Lưu
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="changeAdminPasswordModal"
+            >
+                Hủy
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - CHANGE ADMIN PIN
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="changeAdminPinModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon">
+            🔑
+        </div>
+
+
+        <h2>
+            ĐỔI PIN ADMIN
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Cập nhật PIN xác nhận thao tác quản lý
+        </p>
+
+
+        <div class="form-group">
+
+            <label>
+                PIN hiện tại
+            </label>
+
+            <input
+                type="password"
+                id="currentAdminPin"
+                inputmode="numeric"
+                maxlength="10"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                PIN mới
+            </label>
+
+            <input
+                type="password"
+                id="newAdminPin"
+                inputmode="numeric"
+                maxlength="10"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Xác nhận PIN mới
+            </label>
+
+            <input
+                type="password"
+                id="confirmNewAdminPin"
+                inputmode="numeric"
+                maxlength="10"
+            >
+
+        </div>
+
+
+        <p
+            class="error-message"
+            id="adminPinChangeError"
+        ></p>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="save-btn"
+                id="saveAdminPinBtn"
+            >
+                Lưu
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="changeAdminPinModal"
+            >
+                Hủy
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL - DELETE
+====================================================== -->
+
+<div
+    class="modal-overlay"
+    id="deleteModal"
+>
+
+    <div class="modal small-modal">
+
+        <div class="modal-icon">
+            ⚠️
+        </div>
+
+
+        <h2>
+            Xóa Cabinet
+        </h2>
+
+
+        <p class="modal-subtitle">
+            Bạn có chắc muốn xóa đăng ký này?
+        </p>
+
+
+        <div class="delete-info">
+
+            Cabinet:
+
+            <strong id="deleteCabinetName">
+                Cabinet 1
+            </strong>
+
+        </div>
+
+
+        <div class="modal-buttons">
+
+            <button
+                class="delete-btn"
+                id="confirmDeleteBtn"
+            >
+                Xóa
+            </button>
+
+
+            <button
+                class="cancel-btn"
+                data-close="deleteModal"
+            >
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     TOAST
+====================================================== -->
+
+<div
+    class="toast"
+    id="toast"
+>
+    Thành công
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script type="module" src="script.js"></script>
+
+</body>
+
+</html>
