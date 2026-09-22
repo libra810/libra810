@@ -133,6 +133,15 @@ adminModeButton.addEventListener("click", () => {
     pinLabel.textContent = isAdminMode ? "Mật khẩu" : "PIN";
     mssvInput.placeholder = isAdminMode ? "Nhập email Admin" : "Nhập MSSV";
     pinInput.placeholder = isAdminMode ? "Nhập mật khẩu" : "Nhập PIN";
+    mssvInput.inputMode = isAdminMode ? "email" : "numeric";
+    pinInput.inputMode = isAdminMode ? "text" : "numeric";
+
+    if (isAdminMode) {
+        pinInput.removeAttribute("maxlength");
+    } else {
+        pinInput.maxLength = 10;
+    }
+
     adminModeButton.textContent = isAdminMode
         ? "Đăng nhập người dùng"
         : "Đăng nhập quản trị viên";
