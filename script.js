@@ -1,6 +1,7 @@
 import { db } from "./firebase-config.js";
 import {
     collection,
+    deleteField,
     deleteDoc,
     doc,
     getDoc,
@@ -317,6 +318,20 @@ function isCabinetRegistered(cabinetName) {
 
     return registeredCards.some(
         card => card.cabinet === cabinetName
+    );
+
+}
+
+function isMssvRegistered(mssv) {
+
+    const normalizedMssv =
+        mssv.trim().toLowerCase();
+
+    return registeredCards.some(
+        card =>
+            String(card.mssv || "")
+                .trim()
+                .toLowerCase() === normalizedMssv
     );
 
 }
@@ -1193,6 +1208,17 @@ document.getElementById(
 
         }
 
+        if (isMssvRegistered(mssv)) {
+
+            showToast(
+                "MSSV này đã đăng ký tủ",
+                "error"
+            );
+
+            return;
+
+        }
+
         if (!phone) {
 
             alert(
@@ -1267,6 +1293,18 @@ async function finishRegister() {
         document.getElementById(
             "modalUID"
         ).textContent;
+
+
+    if (isMssvRegistered(mssv)) {
+
+        showToast(
+            "MSSV này đã đăng ký tủ",
+            "error"
+        );
+
+        return;
+
+    }
 
 
     const now =
@@ -2194,15 +2232,6 @@ async function finishDelete() {
 
     }
 
-    addHistory(
-        card.cabinet,
-        "DELETE",
-        "SUCCESS",
-        "ADMIN",
-        `Xóa ${card.owner}`
-    );
-
-
     registeredCards.splice(
         selectedCardIndex,
         1
@@ -2353,7 +2382,7 @@ function handleMqttMessage(message) {
         isOpen ? "OPEN" : "CLOSE",
         "SUCCESS",
         "USER",
-        "MQTT HiveMQ"
+        ""
     );
 
 
@@ -2478,7 +2507,7 @@ function finishToggle() {
         action,
         "SUCCESS",
         "ADMIN",
-        "Web -> HiveMQ"
+        ""
     );
 
 
@@ -2509,13 +2538,6 @@ function addHistory(
 
 
     const historyItem = {
-
-        id:
-            Date.now(),
-
-        createdAt:
-            now.toISOString(),
-
         time:
             formatTime(now),
 
@@ -2539,11 +2561,10 @@ function addHistory(
         doc(historyCollection);
 
 
-    historyItem.firestoreId =
-        historyReference.id;
-
-
-    historyData.unshift(historyItem);
+    historyData.unshift({
+        firestoreId: historyReference.id,
+        ...historyItem
+    });
 
 
     setDoc(
@@ -2568,15 +2589,44 @@ async function loadHistory() {
 
         historyData = snapshot.docs
             .map(
-                documentSnapshot => ({
-                    firestoreId: documentSnapshot.id,
-                    ...documentSnapshot.data()
-                })
+                documentSnapshot => {
+                    const data = documentSnapshot.data();
+                    const legacyFields = [
+                        "firestoreId",
+                        "id",
+                        "createdAt"
+                    ];
+
+                    if (legacyFields.some(field => Object.hasOwn(data, field))) {
+                        updateDoc(
+                            documentSnapshot.ref,
+                            Object.fromEntries(
+                                legacyFields.map(field => [field, deleteField()])
+                            )
+                        ).catch(error => {
+                            console.error("Không thể xóa field lịch sử cũ:", error);
+                        });
+                    }
+
+                    return {
+                        ...data,
+                        firestoreId: documentSnapshot.id
+                    };
+                }
             )
             .sort(
-                (firstItem, secondItem) =>
-                    new Date(secondItem.createdAt || 0) -
-                    new Date(firstItem.createdAt || 0)
+                (firstItem, secondItem) => {
+                    const firstTimestamp =
+                        Date.parse(`${firstItem.date || ""}T${firstItem.time || "00:00:00"}`) ||
+                        Date.parse(firstItem.createdAt || "") ||
+                        0;
+                    const secondTimestamp =
+                        Date.parse(`${secondItem.date || ""}T${secondItem.time || "00:00:00"}`) ||
+                        Date.parse(secondItem.createdAt || "") ||
+                        0;
+
+                    return secondTimestamp - firstTimestamp;
+                }
             );
 
 
