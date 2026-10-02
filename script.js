@@ -15,15 +15,11 @@ const MQTT_CONFIG = {
     port: 8884,
     path: "/mqtt",
     topic: "esp32/lock",
-    historyTopic: "locker/history",
-    statusTopic: "esp32/status",
     username: "xuanphuc",
     password: "tnxp2004108"
 };
 
 let mqttClient = null;
-
-const recentlyPublishedCommands = [];
 
 /* =====================================================
    SMART CABINET
@@ -38,6 +34,8 @@ const recentlyPublishedCommands = [];
 let registeredCards = [];
 
 let historyData = [];
+
+const pendingHistoryWrites = new Map();
 
 let pendingAction = null;
 
@@ -2256,30 +2254,12 @@ async function finishDelete() {
    KHÔNG CẦN ADMIN PIN
 ===================================================== */
 
-function isCabinetCommand(command) {
-
-    return [
-        "OPEN1",
-        "OPEN2",
-        "CLOSE1",
-        "CLOSE2"
-    ].includes(command);
-
-}
-
-
 function publishCabinetCommand(command) {
 
     if (!mqttClient || !mqttClient.connected) {
         console.warn("HiveMQ chưa kết nối, không gửi được", command);
         return;
     }
-
-
-    recentlyPublishedCommands.push({
-        command,
-        expiresAt: Date.now() + 10000
-    });
 
 
     mqttClient.publish(
@@ -2331,69 +2311,6 @@ function updateCabinetState(cabinetNumber, isOpen) {
 }
 
 
-function handleMqttMessage(message) {
-
-    const command =
-        message.toString().trim().toUpperCase();
-
-
-    if (!isCabinetCommand(command)) {
-        return;
-    }
-
-
-    const now = Date.now();
-    const echoedCommand = recentlyPublishedCommands.find(
-        item =>
-            item.command === command &&
-            item.expiresAt > now
-    );
-
-
-    recentlyPublishedCommands.splice(
-        0,
-        recentlyPublishedCommands.length,
-        ...recentlyPublishedCommands.filter(
-            item => item.expiresAt > now
-        )
-    );
-
-
-    const echoIndex = recentlyPublishedCommands.indexOf(
-        echoedCommand
-    );
-
-
-    if (echoIndex !== -1) {
-        recentlyPublishedCommands.splice(echoIndex, 1);
-        return;
-    }
-
-
-    const cabinetNumber = Number(command.at(-1));
-    const isOpen = command.startsWith("OPEN");
-
-
-    updateCabinetState(cabinetNumber, isOpen);
-
-
-    addHistory(
-        `Cabinet ${cabinetNumber}`,
-        isOpen ? "OPEN" : "CLOSE",
-        "SUCCESS",
-        "USER",
-        ""
-    );
-
-
-    renderHistory();
-    showToast(
-        `Cabinet ${cabinetNumber} đã ${isOpen ? "mở" : "đóng"} từ HiveMQ`
-    );
-
-}
-
-
 function connectToHiveMQ() {
 
     if (!window.mqtt) {
@@ -2415,26 +2332,7 @@ function connectToHiveMQ() {
 
 
     mqttClient.on("connect", () => {
-
-        mqttClient.subscribe(
-            MQTT_CONFIG.topic,
-            error => {
-
-                if (error) {
-                    console.error("Không thể subscribe HiveMQ:", error);
-                    return;
-                }
-
-                console.log("Đã kết nối HiveMQ:", MQTT_CONFIG.topic);
-
-            }
-        );
-
-    });
-
-
-    mqttClient.on("message", (_topic, message) => {
-        handleMqttMessage(message);
+        console.log("Đã kết nối HiveMQ để gửi lệnh:", MQTT_CONFIG.topic);
     });
 
 
@@ -2567,12 +2465,23 @@ function addHistory(
     });
 
 
-    setDoc(
+    const writePromise = setDoc(
         historyReference,
         historyItem
-    ).catch(
+    );
+
+    pendingHistoryWrites.set(
+        historyReference.id,
+        writePromise
+    );
+
+    writePromise.catch(
         error => {
             console.error("Không thể lưu lịch sử:", error);
+        }
+    ).finally(
+        () => {
+            pendingHistoryWrites.delete(historyReference.id);
         }
     );
 
@@ -2647,19 +2556,24 @@ async function loadHistory() {
 
 async function finishDeleteHistory() {
 
-    if (!selectedHistoryId) {
+    const historyId = selectedHistoryId;
+
+
+    if (!historyId) {
         return;
     }
 
 
     try {
 
+        await pendingHistoryWrites.get(historyId);
+
         await deleteDoc(
-            doc(db, "history", selectedHistoryId)
+            doc(db, "history", historyId)
         );
 
         historyData = historyData.filter(
-            item => item.firestoreId !== selectedHistoryId
+            item => item.firestoreId !== historyId
         );
 
         renderHistory();
@@ -2672,7 +2586,9 @@ async function finishDeleteHistory() {
 
     } finally {
 
-        selectedHistoryId = null;
+        if (selectedHistoryId === historyId) {
+            selectedHistoryId = null;
+        }
 
     }
 
