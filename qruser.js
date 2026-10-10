@@ -40,7 +40,7 @@ async function loadUserQr() {
         const personalData =
             user.personalData.replace(/^PD-/, "");
 
-        userInfo.textContent = `${user.owner} - MSSV ${user.mssv}`;
+        userInfo.textContent = `${user.owner}`;
         if (personalDataElement) {
             personalDataElement.textContent = personalData;
         }
