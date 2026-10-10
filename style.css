@@ -790,6 +790,25 @@ tbody tr:last-child td {
     margin-bottom: 7px;
 }
 
+.history-export {
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-bottom: 8px;
+}
+
+.history-export input[type="number"] {
+
+    width: 90px;
+
+}
+
 
 .history-description {
 
@@ -1221,7 +1240,8 @@ footer {
 
 
     .register-row,
-    .history-filter {
+    .history-filter,
+    .history-export {
 
         flex-wrap: wrap;
     }

@@ -45,6 +45,9 @@ let selectedCabinet = null;
 
 let selectedHistoryId = null;
 
+const TOTAL_CABINETS = 10;
+const DEMO_CABINET_COUNT = 2;
+
 const registeredCabinetsCollection =
     collection(db, "registeredCabinets");
 
@@ -136,7 +139,90 @@ function updateClock() {
 }
 
 
+function renderCabinetControls() {
+
+    const cabinetList =
+        document.getElementById("cabinetList");
+
+    if (cabinetList) {
+        cabinetList.innerHTML = Array.from(
+            { length: DEMO_CABINET_COUNT },
+            (_, index) => {
+                const cabinetNumber = index + 1;
+                return `
+                    <div class="cabinet-card">
+                        <div class="cabinet-image" id="cabinetImage${cabinetNumber}">
+                            <div class="cabinet-door">
+                                <div class="handle"></div>
+                            </div>
+                        </div>
+                        <div class="cabinet-info">
+                            <h2>CABINET ${cabinetNumber}</h2>
+                            <div class="status">
+                                <span class="status-dot" id="statusDot${cabinetNumber}"></span>
+                                <span id="statusText${cabinetNumber}">CLOSED</span>
+                            </div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="switch${cabinetNumber}">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                `;
+            }
+        ).join("");
+    }
+
+    const cabinetSelect =
+        document.getElementById("cabinetSelect");
+
+    if (cabinetSelect) {
+        cabinetSelect.innerHTML = Array.from(
+            { length: TOTAL_CABINETS },
+            (_, index) => {
+                const cabinetNumber = index + 1;
+                return `<option value="Cabinet ${cabinetNumber}">Cabinet ${cabinetNumber}</option>`;
+            }
+        ).join("");
+    }
+
+    const historyCabinet =
+        document.getElementById("historyCabinet");
+
+    if (historyCabinet) {
+        historyCabinet.innerHTML = [
+            '<option value="all">Tất cả tủ</option>',
+            ...Array.from(
+                { length: TOTAL_CABINETS },
+                (_, index) => {
+                    const cabinetNumber = index + 1;
+                    return `<option value="Cabinet ${cabinetNumber}">Cabinet ${cabinetNumber}</option>`;
+                }
+            )
+        ].join("");
+    }
+
+    Array.from(
+        { length: DEMO_CABINET_COUNT },
+        (_, index) => {
+            const cabinetNumber = index + 1;
+            const switchElement =
+                document.getElementById(`switch${cabinetNumber}`);
+
+            if (switchElement) {
+                switchElement.onchange = function () {
+                    selectedCabinet = cabinetNumber;
+                    finishToggle();
+                };
+            }
+        }
+    );
+}
+
+
 updateClock();
+
+renderCabinetControls();
 
 
 setInterval(
@@ -260,50 +346,96 @@ if (historyDate) {
 
 }
 
+const nowForExport = new Date();
+const exportDateInput = document.getElementById("exportHistoryDate");
+const exportMonthInput = document.getElementById("exportHistoryMonth");
+const exportYearInput = document.getElementById("exportHistoryYear");
+
+if (exportDateInput) {
+    exportDateInput.value = getTodayInputDate();
+}
+
+if (exportMonthInput) {
+    exportMonthInput.value = getTodayInputDate().slice(0, 7);
+}
+
+if (exportYearInput) {
+    exportYearInput.value = String(nowForExport.getFullYear());
+}
+
 
 /* =====================================================
-   UID
+   UID / PERSONAL DATA
+   DỰA TRÊN TÊN + CCCD ĐỂ GIẢM TRÙNG LẶP KHI DỮ LIỆU LỚN
 ===================================================== */
 
-function generateUID() {
+function normalizeSeed(value) {
 
-    const chars =
-        "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
-
-    let uid = "";
-
-    for (let i = 0; i < 26; i++) {
-
-        const randomIndex =
-            Math.floor(
-                Math.random() * chars.length
-            );
-
-        uid += chars[randomIndex];
-
-    }
-
-    return uid;
+    return String(value || "")
+        .trim()
+        .toUpperCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, "");
 
 }
 
-function generatePersonalData() {
+function buildUserSeed(owner, cccd) {
 
-    const chars =
-        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    const normalOwner = normalizeSeed(owner);
+    const normalCccd = normalizeSeed(cccd);
 
-    let personalData = "";
+    return `${normalOwner}|${normalCccd}` || "SMARTCABINET";
 
-    for (let i = 0; i < 32; i++) {
+}
 
-        const randomIndex =
-            Math.floor(Math.random() * chars.length);
+function generateDeterministicValue(seed, length, chars) {
 
-        personalData += chars[randomIndex];
+    let hash = 2166136261;
+
+    for (let i = 0; i < seed.length; i++) {
+
+        hash ^= seed.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
 
     }
 
-    return personalData;
+    let result = "";
+
+    for (let i = 0; i < length; i++) {
+
+        hash = (hash + 0x9e3779b9) >>> 0;
+        result += chars[hash % chars.length];
+
+    }
+
+    return result;
+
+}
+
+function generateUID(owner, cccd) {
+
+    const seed = buildUserSeed(owner, cccd);
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+
+    return generateDeterministicValue(
+        `${seed}:UID`,
+        26,
+        chars
+    );
+
+}
+
+function generatePersonalData(owner, cccd) {
+
+    const seed = buildUserSeed(owner, cccd);
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+
+    return generateDeterministicValue(
+        `${seed}:PERSONAL`,
+        32,
+        chars
+    );
 
 }
 
@@ -320,16 +452,16 @@ function isCabinetRegistered(cabinetName) {
 
 }
 
-function isMssvRegistered(mssv) {
+function iscancuoccongdanRegistered(cancuoccongdan) {
 
-    const normalizedMssv =
-        mssv.trim().toLowerCase();
+    const normalizedCancuoccongdan =
+        cancuoccongdan.trim().toLowerCase();
 
     return registeredCards.some(
         card =>
-            String(card.mssv || "")
+            String(card.cancuoccongdan || "")
                 .trim()
-                .toLowerCase() === normalizedMssv
+                .toLowerCase() === normalizedCancuoccongdan
     );
 
 }
@@ -721,6 +853,35 @@ async function confirmAdminPin() {
     );
 
 
+    if (pendingAction === "edit") {
+
+        const card =
+            registeredCards[selectedCardIndex];
+
+        if (!card) {
+            pendingAction = null;
+            return;
+        }
+
+        document.getElementById("editOwner").value =
+            card.owner;
+
+        document.getElementById("editcancuoccongdan").value =
+            card.cancuoccongdan;
+
+        document.getElementById("editPhone").value =
+            card.phone;
+
+        document.getElementById("editPersonalData").value =
+            card.personalData;
+
+        openModal(editModal);
+        pendingAction = null;
+        return;
+
+    }
+
+
     await executeAdminAction();
 
 }
@@ -1108,10 +1269,18 @@ function openRegisterModal() {
         cabinet;
 
 
+    const cccdInput =
+        document.getElementById("cancuoccongdanInput");
+
+    const cccdValue =
+        cccdInput ? cccdInput.value.trim() : "";
+    const ownerValue =
+        document.getElementById("ownerInput")?.value.trim() || "";
+
     document.getElementById(
         "modalUID"
     ).textContent =
-        generateUID();
+        generateUID(ownerValue, cccdValue);
 
 
     document.getElementById(
@@ -1119,7 +1288,7 @@ function openRegisterModal() {
     ).value = "";
 
 document.getElementById(
-        "mssvInput"
+        "cancuoccongdanInput"
     ).value = "";
 
     document.getElementById(
@@ -1152,9 +1321,9 @@ document.getElementById(
             document.getElementById(
                 "ownerInput"
             ).value.trim();
-        const mssv =
+        const cancuoccongdan =
             document.getElementById(
-                "mssvInput"
+                "cancuoccongdanInput"
             ).value.trim();
 
         const phone =
@@ -1196,20 +1365,20 @@ document.getElementById(
             return;
 
         }
-        if (!mssv) {
+        if (!cancuoccongdan) {
 
             alert(
-                "Vui lòng nhập MSSV."
+                "Vui lòng nhập Căn cước công dân."
             );
 
             return;
 
         }
 
-        if (isMssvRegistered(mssv)) {
+        if (iscancuoccongdanRegistered(cancuoccongdan)) {
 
             showToast(
-                "MSSV này đã đăng ký tủ",
+                "Căn cước công dân này đã đăng ký tủ",
                 "error"
             );
 
@@ -1271,9 +1440,9 @@ async function finishRegister() {
         document.getElementById(
             "ownerInput"
         ).value.trim();
-    const mssv =
+    const cancuoccongdan =
         document.getElementById(
-            "mssvInput"
+            "cancuoccongdanInput"
         ).value.trim();
 
     const phone =
@@ -1288,15 +1457,17 @@ async function finishRegister() {
 
 
     const uid =
-        document.getElementById(
-            "modalUID"
-        ).textContent;
+        generateUID(owner, cancuoccongdan);
+
+    document.getElementById(
+        "modalUID"
+    ).textContent = uid;
 
 
-    if (isMssvRegistered(mssv)) {
+    if (iscancuoccongdanRegistered(cancuoccongdan)) {
 
         showToast(
-            "MSSV này đã đăng ký tủ",
+            "Căn cước công dân này đã đăng ký tủ",
             "error"
         );
 
@@ -1326,7 +1497,7 @@ async function finishRegister() {
         cabinet,
 
         owner,
-        mssv,
+        cancuoccongdan,
         phone,
 
         uid,
@@ -1341,7 +1512,7 @@ async function finishRegister() {
             formatDate(expiration),
 
         personalData:
-            generatePersonalData()
+            generatePersonalData(owner, cancuoccongdan)
 
     };
 
@@ -1352,7 +1523,7 @@ async function finishRegister() {
             cabinet,
             owner,
             expirationDate: card.expirationDate,
-            mssv,
+            cancuoccongdan,
             personalData: card.personalData,
             phone,
             pin: card.pin,
@@ -1405,6 +1576,16 @@ async function finishRegister() {
    RENDER CARDS
 ===================================================== */
 
+function getCabinetSortNumber(cabinetName) {
+
+    const match =
+        String(cabinetName).match(/(\d+)/);
+
+    return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
+
+}
+
+
 function renderCards() {
 
     const tbody =
@@ -1446,8 +1627,21 @@ function renderCards() {
     }
 
 
-    registeredCards.forEach(
+    const sortedCards = [...registeredCards].sort(
+        (a, b) =>
+            getCabinetSortNumber(a.cabinet) -
+            getCabinetSortNumber(b.cabinet)
+    );
+
+
+    sortedCards.forEach(
         (card, index) => {
+
+            const maskedCccd = "---";
+            const maskedPhone = "---";
+            const maskedUid = "---";
+            const maskedPin = "---";
+            const maskedPersonalData = "---";
 
             const row =
                 document.createElement(
@@ -1465,7 +1659,7 @@ function renderCards() {
 
                 <td>
                     ${escapeHTML(
-                        card.mssv
+                        maskedCccd
                     )}
                 </td>
 
@@ -1477,18 +1671,20 @@ function renderCards() {
 
                 <td>
                     ${escapeHTML(
-                        card.phone
+                        maskedPhone
                     )}
                 </td>
 
                 <td>
                     ${escapeHTML(
-                        card.uid
+                        maskedUid
                     )}
                 </td>
 
                 <td>
-                    ••••
+                    ${escapeHTML(
+                        maskedPin
+                    )}
                 </td>
 
                 <td>
@@ -1501,7 +1697,7 @@ function renderCards() {
 
                 <td>
                     ${escapeHTML(
-                        card.personalData
+                        maskedPersonalData
                     )}
                 </td>
 
@@ -1654,29 +1850,9 @@ function editCard(index) {
         index;
 
 
-    document.getElementById(
-        "editOwner"
-    ).value =
-        card.owner;
-
-document.getElementById(
-        "editmssv"
-    ).value =
-        card.mssv;
-    document.getElementById(
-        "editPhone"
-    ).value =
-        card.phone;
-
-
-    document.getElementById(
-        "editPersonalData"
-    ).value =
-        card.personalData;
-
-
-    openModal(
-        editModal
+    requireAdmin(
+        "edit",
+        index
     );
 
 }
@@ -1690,16 +1866,16 @@ document.getElementById(
     "saveEditBtn"
 )?.addEventListener(
     "click",
-    function () {
+    async function () {
 
         const owner =
             document.getElementById(
                 "editOwner"
             ).value.trim();
-        const mssv =
+        const cancuoccongdan =
             document.getElementById(
-                "editmssv"
-            ).value.trim();    
+                "editcancuoccongdan"
+            ).value.trim();
 
         const phone =
             document.getElementById(
@@ -1707,10 +1883,10 @@ document.getElementById(
             ).value.trim();
 
 
-        if (!owner || !mssv || !phone) {
+        if (!owner || !cancuoccongdan || !phone) {
 
             alert(
-                "Owner,mssv và Phone không được để trống."
+                "Owner, CCCD và Phone không được để trống."
             );
 
             return;
@@ -1723,10 +1899,7 @@ document.getElementById(
         );
 
 
-        requireAdmin(
-            "edit",
-            selectedCardIndex
-        );
+        await finishEdit();
 
     }
 );
@@ -1753,9 +1926,9 @@ async function finishEdit() {
         document.getElementById(
             "editOwner"
         ).value.trim();
-    const mssv =
+    const cancuoccongdan =
         document.getElementById(
-            "editmssv"
+            "editcancuoccongdan"
         ).value.trim();
     const phone =
         document.getElementById(
@@ -1773,7 +1946,7 @@ async function finishEdit() {
             doc(db, "registeredCabinets", card.firestoreId),
             {
                 owner,
-                mssv,
+                cancuoccongdan,
                 phone,
                 personalData
             }
@@ -1787,7 +1960,7 @@ async function finishEdit() {
     }
 
     card.owner = owner;
-    card.mssv = mssv;
+    card.cancuoccongdan = cancuoccongdan;
     card.phone = phone;
     card.personalData = personalData;
 
@@ -2342,39 +2515,6 @@ function connectToHiveMQ() {
 
 }
 
-document.getElementById(
-    "switch1"
-)?.addEventListener(
-    "change",
-    function () {
-
-        selectedCabinet = 1;
-
-        finishToggle();
-
-    }
-);
-
-
-/* =====================================================
-   CABINET SWITCH 2
-   KHÔNG CẦN ADMIN PIN
-===================================================== */
-
-document.getElementById(
-    "switch2"
-)?.addEventListener(
-    "change",
-    function () {
-
-        selectedCabinet = 2;
-
-        finishToggle();
-
-    }
-);
-
-
 /* =====================================================
    CABINET TOGGLE
 ===================================================== */
@@ -2773,6 +2913,134 @@ document.getElementById(
     "click",
     renderHistory
 );
+
+
+function updateExportPeriodInputs() {
+
+    const period =
+        document.getElementById("exportHistoryPeriod")?.value;
+
+    document.getElementById("exportHistoryDate").hidden =
+        period !== "day";
+    document.getElementById("exportHistoryMonth").hidden =
+        period !== "month";
+    document.getElementById("exportHistoryYear").hidden =
+        period !== "year";
+
+}
+
+
+document.getElementById(
+    "exportHistoryPeriod"
+)?.addEventListener(
+    "change",
+    updateExportPeriodInputs
+);
+
+
+function getExportDateRange() {
+
+    const period =
+        document.getElementById("exportHistoryPeriod").value;
+
+    if (period === "day") {
+        const date = document.getElementById("exportHistoryDate").value;
+        return date ? { startDate: date, endDate: date, label: date } : null;
+    }
+
+    if (period === "month") {
+        const month = document.getElementById("exportHistoryMonth").value;
+
+        if (!/^\d{4}-\d{2}$/.test(month)) {
+            return null;
+        }
+
+        const [year, monthNumber] = month.split("-").map(Number);
+        const lastDay = new Date(year, monthNumber, 0).getDate();
+
+        return {
+            startDate: `${month}-01`,
+            endDate: `${month}-${String(lastDay).padStart(2, "0")}`,
+            label: month
+        };
+    }
+
+    const year = document.getElementById("exportHistoryYear").value;
+
+    if (!/^\d{4}$/.test(year)) {
+        return null;
+    }
+
+    return {
+        startDate: `${year}-01-01`,
+        endDate: `${year}-12-31`,
+        label: year
+    };
+
+}
+
+
+document.getElementById(
+    "exportHistoryBtn"
+)?.addEventListener(
+    "click",
+    () => {
+
+        if (!window.XLSX) {
+            showToast("Không tải được thư viện xuất Excel", "error");
+            return;
+        }
+
+        const dateRange = getExportDateRange();
+
+        if (!dateRange) {
+            showToast("Vui lòng chọn ngày, tháng hoặc năm hợp lệ", "error");
+            return;
+        }
+
+        const cabinetFilter =
+            document.getElementById("historyCabinet")?.value || "all";
+
+        const exportItems = historyData
+            .filter(item => {
+                const inDateRange =
+                    item.date >= dateRange.startDate &&
+                    item.date <= dateRange.endDate;
+                const matchesCabinet =
+                    cabinetFilter === "all" || item.cabinet === cabinetFilter;
+
+                return inDateRange && matchesCabinet;
+            })
+            .map(item => ({
+                Ngày: item.date || "",
+                Giờ: item.time || "",
+                Cabinet: item.cabinet || "",
+                Thao_tác: item.action || "",
+                Kết_quả: item.result || "",
+                Nguồn: item.source || "",
+                Chi_tiết: item.detail || ""
+            }));
+
+        if (exportItems.length === 0) {
+            showToast("Không có lịch sử trong khoảng thời gian đã chọn", "error");
+            return;
+        }
+
+        const worksheet = window.XLSX.utils.json_to_sheet(exportItems);
+        const workbook = window.XLSX.utils.book_new();
+        window.XLSX.utils.book_append_sheet(workbook, worksheet, "Lich su tu");
+
+        const safeCabinetName =
+            cabinetFilter === "all" ? "tat-ca-tu" : cabinetFilter.toLowerCase().replace(/\s+/g, "-");
+        const filename = `lich-su-${safeCabinetName}-${dateRange.label}.xlsx`;
+
+        window.XLSX.writeFile(workbook, filename);
+        showToast(`Đã xuất ${exportItems.length} dòng lịch sử`);
+
+    }
+);
+
+updateExportPeriodInputs();
 
 
 document.getElementById(
