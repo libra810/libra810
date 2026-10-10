@@ -7,7 +7,7 @@ import {
     where
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-const mssvInput = document.getElementById("mssv");
+const cccdInput = document.getElementById("cccd");
 const pinInput = document.getElementById("pin");
 const loginButton = document.getElementById("loginBtn");
 const loginError = document.getElementById("loginError");
@@ -16,7 +16,7 @@ const rememberCheckbox = document.getElementById("remember");
 const adminModeButton = document.getElementById("adminModeBtn");
 const loginTitle = document.querySelector(".login-card h2");
 const loginDescription = document.querySelector(".login-description");
-const mssvLabel = document.querySelector('label[for="mssv"]');
+const cccdLabel = document.querySelector('label[for="cccd"]');
 const pinLabel = document.querySelector('label[for="pin"]');
 
 let isAdminMode = false;
@@ -38,11 +38,11 @@ togglePassword.addEventListener("click", () => {
 async function loginUser() {
     clearError();
 
-    const mssv = mssvInput.value.trim();
+    const cccd = cccdInput.value.trim();
     const pin = pinInput.value.trim();
 
-    if (!mssv || !pin) {
-        showError("Vui lòng nhập đầy đủ MSSV và PIN.");
+    if (!cccd || !pin) {
+        showError("Vui lòng nhập đầy đủ CCCD và PIN.");
         return;
     }
 
@@ -53,7 +53,7 @@ async function loginUser() {
         try {
             const adminQuery = query(
                 collection(db, "admin"),
-                where("email", "==", mssv),
+                where("email", "==", cccd),
                 limit(1)
             );
             const snapshot = await getDocs(adminQuery);
@@ -67,7 +67,7 @@ async function loginUser() {
             }
 
             localStorage.setItem("adminLoggedIn", "true");
-            localStorage.setItem("adminEmail", mssv);
+            localStorage.setItem("adminEmail", cccd);
             localStorage.setItem("adminDocumentId", admin.id);
             window.location.href = "index.html";
         } catch (error) {
@@ -87,17 +87,26 @@ async function loginUser() {
     try {
         const usersQuery = query(
             collection(db, "registeredCabinets"),
-            where("mssv", "==", mssv),
+            where("cancuoccongdan", "==", cccd),
             limit(10)
         );
-        const snapshot = await getDocs(usersQuery);
+        let snapshot = await getDocs(usersQuery);
+
+        if (snapshot.empty) {
+            const legacyUsersQuery = query(
+                collection(db, "registeredCabinets"),
+                where("cccd", "==", cccd),
+                limit(10)
+            );
+            snapshot = await getDocs(legacyUsersQuery);
+        }
 
         const user = snapshot.docs.find(
             (candidate) => candidate.data().pin === pin
         );
 
         if (!user) {
-            showError("MSSV hoặc PIN không đúng.");
+            showError("CCCD  hoặc PIN không đúng.");
             return;
         }
 
@@ -108,7 +117,7 @@ async function loginUser() {
 
         storage.setItem("userLoggedIn", "true");
         storage.setItem("userDocumentId", user.id);
-        storage.setItem("userMssv", userData.mssv);
+        storage.setItem("userCccd", userData.cancuoccongdan || userData.cccd || cccd);
         window.location.href = "qruser.html";
     } catch (error) {
         console.error("User login failed:", error);
@@ -129,11 +138,11 @@ adminModeButton.addEventListener("click", () => {
     loginDescription.textContent = isAdminMode
         ? "Đăng nhập để quản lý hệ thống"
         : "Nhập thông tin do quản trị viên cung cấp";
-    mssvLabel.textContent = isAdminMode ? "Email" : "MSSV";
+    cccdLabel.textContent = isAdminMode ? "Email" : "CCCD";
     pinLabel.textContent = isAdminMode ? "Mật khẩu" : "PIN";
-    mssvInput.placeholder = isAdminMode ? "Nhập email Admin" : "Nhập MSSV";
+    cccdInput.placeholder = isAdminMode ? "Nhập email Admin" : "Nhập CCCD";
     pinInput.placeholder = isAdminMode ? "Nhập mật khẩu" : "Nhập PIN";
-    mssvInput.inputMode = isAdminMode ? "email" : "numeric";
+    cccdInput.inputMode = isAdminMode ? "email" : "numeric";
     pinInput.inputMode = isAdminMode ? "text" : "numeric";
 
     if (isAdminMode) {
@@ -148,7 +157,7 @@ adminModeButton.addEventListener("click", () => {
     clearError();
 });
 
-[mssvInput, pinInput].forEach((input) => {
+[cccdInput, pinInput].forEach((input) => {
     input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             loginUser();
@@ -156,8 +165,8 @@ adminModeButton.addEventListener("click", () => {
     });
 });
 
-const savedMssv = localStorage.getItem("userMssv");
-if (savedMssv) {
-    mssvInput.value = savedMssv;
+const savedCccd = localStorage.getItem("userCccd");
+if (savedCccd) {
+    cccdInput.value = savedCccd;
     rememberCheckbox.checked = true;
 }
