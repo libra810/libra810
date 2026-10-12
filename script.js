@@ -420,7 +420,7 @@ function generateUID(owner, cccd) {
 
     return generateDeterministicValue(
         `${seed}:UID`,
-        26,
+        32,
         chars
     );
 
@@ -1970,7 +1970,7 @@ async function finishEdit() {
         "EDIT",
         "SUCCESS",
         "ADMIN",
-        `Chỉnh sửa ${card.owner}`
+        " "
     );
 
 
@@ -2301,7 +2301,7 @@ async function finishUpdatePin() {
         "UPDATE PIN",
         "SUCCESS",
         "ADMIN",
-        "Thay đổi PIN Cabinet"
+        " "
     );
 
 
