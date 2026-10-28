@@ -15,6 +15,8 @@ const MQTT_CONFIG = {
     port: 8884,
     path: "/mqtt",
     topic: "esp32/lock",
+    statusTopic: "esp32/status",
+    relayStatusTopic: "esp32/relay/status",
     username: "xuanphuc",
     password: "tnxp2004108"
 };
@@ -2451,11 +2453,7 @@ function publishCabinetCommand(command) {
 }
 
 
-function updateCabinetState(cabinetNumber, isOpen) {
-
-    const switchElement =
-        document.getElementById(`switch${cabinetNumber}`);
-
+function updateCabinetDisplay(cabinetNumber, isOpen) {
     const statusText =
         document.getElementById(`statusText${cabinetNumber}`);
 
@@ -2467,7 +2465,6 @@ function updateCabinetState(cabinetNumber, isOpen) {
 
 
     if (
-        !switchElement ||
         !statusText ||
         !statusDot ||
         !cabinetImage
@@ -2476,10 +2473,40 @@ function updateCabinetState(cabinetNumber, isOpen) {
     }
 
 
-    switchElement.checked = isOpen;
     statusText.textContent = isOpen ? "OPEN" : "CLOSED";
     statusDot.classList.toggle("open", isOpen);
     cabinetImage.classList.toggle("open", isOpen);
+
+}
+
+
+function updateCabinetSwitch(cabinetNumber, isOpen) {
+
+    const switchElement =
+        document.getElementById(`switch${cabinetNumber}`);
+
+    if (switchElement) {
+        switchElement.checked = isOpen;
+    }
+
+}
+
+
+function handleCabinetStatus(message) {
+
+    const status = message.trim().toUpperCase();
+    const match = status.match(/^(?:TU([12])(OPEN|CLOSED|CLOSE)|(OPEN|CLOSED|CLOSE)([12]))$/);
+
+    if (!match) {
+        return;
+    }
+
+    const cabinetNumber = Number(match[1] || match[4]);
+    const state = match[2] || match[3];
+
+    const isOpen = state === "OPEN";
+
+    return { cabinetNumber, isOpen };
 
 }
 
@@ -2505,7 +2532,44 @@ function connectToHiveMQ() {
 
 
     mqttClient.on("connect", () => {
-        console.log("Đã kết nối HiveMQ để gửi lệnh:", MQTT_CONFIG.topic);
+        const topics = [
+            MQTT_CONFIG.statusTopic,
+            MQTT_CONFIG.relayStatusTopic
+        ];
+
+        mqttClient.subscribe(topics, error => {
+            if (error) {
+                console.error("Không thể đăng ký nhận trạng thái MQTT:", error);
+                return;
+            }
+
+            console.log("Đã kết nối HiveMQ và nhận dữ liệu từ:", topics);
+        });
+    });
+
+
+    mqttClient.on("message", (topic, payload) => {
+        if (
+            topic !== MQTT_CONFIG.statusTopic &&
+            topic !== MQTT_CONFIG.relayStatusTopic
+        ) {
+            return;
+        }
+
+        const message = typeof payload === "string"
+            ? payload
+            : new TextDecoder().decode(payload);
+        const status = handleCabinetStatus(message);
+
+        if (!status) {
+            return;
+        }
+
+        if (topic === MQTT_CONFIG.statusTopic) {
+            updateCabinetDisplay(status.cabinetNumber, status.isOpen);
+        } else {
+            updateCabinetSwitch(status.cabinetNumber, status.isOpen);
+        }
     });
 
 
@@ -2536,7 +2600,6 @@ function finishToggle() {
     const command = `${action}${selectedCabinet}`;
 
 
-    updateCabinetState(selectedCabinet, isOpen);
     publishCabinetCommand(command);
 
 
